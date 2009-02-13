@@ -99,6 +99,7 @@ mkdir -p $OCAMLFIND_DESTDIR/sha
 ocamlfind install sha META ./{*.mli,*.cmi,*.cma,*.a,*.cmxa,*.cmx}
 install -d -m 0755 %{buildroot}%{_bindir}
 for p in sha*sum ; do mv $p ml$p ; done
+# rename shaXsum by mlshaXsum (conflict with coreutils)
 install -m 0755 mlsha*sum %{buildroot}%{_bindir}/
 
 %clean
@@ -111,7 +112,10 @@ rm -rf %{buildroot}
 %{_libdir}/ocaml/sha/META
 %{_libdir}/ocaml/sha/*.cma
 %{_libdir}/ocaml/sha/*.cmi
-%{_bindir}/mlsha*sum
+%{_bindir}/mlsha1sum
+# fixme: those 2 output the same than mlsha1sum
+#%{_bindir}/mlsha256sum
+#%{_bindir}/mlsha512sum
 
 %files devel
 %defattr(-,root,root)
