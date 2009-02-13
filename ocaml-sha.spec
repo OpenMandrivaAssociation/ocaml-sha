@@ -98,7 +98,8 @@ mkdir -p $OCAMLFIND_DESTDIR/stublibs
 mkdir -p $OCAMLFIND_DESTDIR/sha
 ocamlfind install sha META ./{*.mli,*.cmi,*.cma,*.a,*.cmxa,*.cmx}
 install -d -m 0755 %{buildroot}%{_bindir}
-install -m 0755 sha1sum sha256sum sha512sum %{buildroot}%{_bindir}/
+for p in sha*sum ; do mv $p ml$p ; done
+install -m 0755 mlsha*sum %{buildroot}%{_bindir}/
 
 %clean
 rm -rf %{buildroot}
@@ -110,9 +111,7 @@ rm -rf %{buildroot}
 %{_libdir}/ocaml/sha/META
 %{_libdir}/ocaml/sha/*.cma
 %{_libdir}/ocaml/sha/*.cmi
-%{_bindir}/sha1sum
-%{_bindir}/sha256sum
-%{_bindir}/sha512sum
+%{_bindir}/mlsha*sum
 
 %files devel
 %defattr(-,root,root)
