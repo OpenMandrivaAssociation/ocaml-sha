@@ -100,7 +100,9 @@ ocamlfind install sha META ./{*.mli,*.cmi,*.cma,*.a,*.cmxa,*.cmx}
 install -d -m 0755 %{buildroot}%{_bindir}
 for p in sha*sum ; do mv $p ml$p ; done
 # rename shaXsum by mlshaXsum (conflict with coreutils)
-install -m 0755 mlsha*sum %{buildroot}%{_bindir}/
+# fixme: those 2 output the same than mlsha1sum
+#install -m 0755 mlsha*sum %{buildroot}%{_bindir}/
+install -m 0755 mlsha1sum %{buildroot}%{_bindir}/
 
 %clean
 rm -rf %{buildroot}
