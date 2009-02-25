@@ -14,6 +14,8 @@ URL:            http://tab.snarc.org/projects/ocaml_sha
 Source0:        http://tab.snarc.org/download/ocaml/ocaml_sha-%{version}.tar.bz2
 # I don't understand this patch, let's trust its author
 Patch0:         ocaml-sha-fixed-makefile.patch
+# the command line utilities use argv.(0) (cf mlcmd_renamed)
+Patch1:         ocaml-sha-1.4_sumrenamed.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}
 BuildRequires:  ocaml-findlib
 # used to generate the documentation
@@ -67,6 +69,8 @@ EOF
 # patch the upstream's Makefile
 %patch0 -p1
 
+%patch1 -p1
+
 # Adding a META file
 cat > META.in <<EOF
 name="sha"
@@ -99,9 +103,8 @@ mkdir -p $OCAMLFIND_DESTDIR/sha
 ocamlfind install sha META ./{*.mli,*.cmi,*.cma,*.a,*.cmxa,*.cmx}
 install -d -m 0755 %{buildroot}%{_bindir}
 for p in sha*sum ; do mv $p ml$p ; done
-# rename shaXsum by mlshaXsum (conflict with coreutils)
-# fixme: those 2 output the same than mlsha1sum
-#install -m 0755 mlsha*sum %{buildroot}%{_bindir}/
+# mlcmd_renamed: rename shaXsum by mlshaXsum (conflict with coreutils)
+install -m 0755 mlsha*sum %{buildroot}%{_bindir}/
 install -m 0755 mlsha1sum %{buildroot}%{_bindir}/
 
 %clean
@@ -115,9 +118,8 @@ rm -rf %{buildroot}
 %{_libdir}/ocaml/sha/*.cma
 %{_libdir}/ocaml/sha/*.cmi
 %{_bindir}/mlsha1sum
-# fixme: those 2 output the same than mlsha1sum
-#%{_bindir}/mlsha256sum
-#%{_bindir}/mlsha512sum
+%{_bindir}/mlsha256sum
+%{_bindir}/mlsha512sum
 
 %files devel
 %defattr(-,root,root)
