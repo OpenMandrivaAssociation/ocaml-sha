@@ -39,8 +39,8 @@ cat > META.in <<EOF
 name="sha"
 description="SHA cryptographic hash functions"
 version="%{version}"
-archive(byte)="sha1.cma sha256.cma sha512.cma"
-archive(native)="sha1.cmxa sha256.cmxa sha512.cmxa"
+archive(byte)="sha.cmo sha1.cma sha256.cma sha512.cma"
+archive(native)="sha.cmx sha1.cmxa sha256.cmxa sha512.cmxa"
 EOF
 
 # in case it would appear in a futur version
