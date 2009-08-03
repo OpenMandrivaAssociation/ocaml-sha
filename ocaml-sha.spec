@@ -1,27 +1,15 @@
-# The upstream Makefile doesn't work "as is" on Mandriva.
-# On Debian too, there the Makefile was replaced by a custom
-# one with OCamlMakefile.  With this way the lib is not build
-# in the same way than the upstream.
-# A lot of OCaml users are under Debian.
-
 Name:           ocaml-sha
-Version:        1.4
-Release:        %mkrel 5
+Version:        1.5
+Release:        %mkrel 1
 Summary:        SHA Cryptographic Hash Functions for OCaml
 License:        GPL2
 Group:          Development/Other
 URL:            http://tab.snarc.org/projects/ocaml_sha
 Source0:        http://tab.snarc.org/download/ocaml/ocaml_sha-%{version}.tar.bz2
-# I don't understand this patch, let's trust its author
-Patch0:         ocaml-sha-fixed-makefile.patch
 # the command line utilities use argv.(0) (cf mlcmd_renamed)
-Patch1:         ocaml-sha-1.4_sumrenamed.patch
+Patch0:         ocaml-sha-1.4_sumrenamed.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}
 BuildRequires:  ocaml-findlib
-# used to generate the documentation
-BuildRequires:  ocamlmakefile
-BuildRequires:  tetex-latex
-BuildRequires:  gzip
 
 %description
 SHA is a cryptographic hash function.
@@ -44,40 +32,15 @@ developing applications that use %{name}.
 
 %prep
 %setup -q -n ocaml_sha-%{version}
-
-# custom Makefile which uses OCamlMakefile
-cat > Makefile.cust <<EOF
-OCAMLMAKEFILE = /usr/share/ocamlmakefile/OCamlMakefile
-
-SOURCES =             \
-    sha.ml            \
-    sha1.ml           \
-    sha1.mli          \
-    sha1_stubs.c      \
-    sha256.ml         \
-    sha256.mli        \
-    sha256_stubs.c    \
-    sha512.ml         \
-    sha512.mli        \
-    sha512_stubs.c
-
-RESULT = sha
-
--include \$(OCAMLMAKEFILE)
-EOF
-
-# patch the upstream's Makefile
 %patch0 -p1
-
-%patch1 -p1
 
 # Adding a META file
 cat > META.in <<EOF
 name="sha"
 description="SHA cryptographic hash functions"
 version="%{version}"
-archive(byte)="sha.cma"
-archive(native)="sha.cmxa"
+archive(byte)="sha1.cma sha256.cma sha512.cma"
+archive(native)="sha1.cmxa sha256.cmxa sha512.cmxa"
 EOF
 
 # in case it would appear in a futur version
@@ -85,13 +48,13 @@ test -f META && (echo "Warning: there is a META file" > /dev/stderr)
 test -f META || mv META.in META
 
 %build
-# upstream's Makefile
 make       # the lib
 make bins  # the progs
 
-# custom's Makefile
-make -f Makefile.cust doc
-gzip --best doc/sha/latex/doc.ps
+mkdir doc
+ocamldoc  sha1.mli  sha256.mli  sha512.mli \
+    -colorize-code -html  \
+    -d doc
 
 %install
 rm -rf %{buildroot}
@@ -124,8 +87,7 @@ rm -rf %{buildroot}
 %files devel
 %defattr(-,root,root)
 %doc sha.test.ml
-%doc doc/sha/html
-%doc doc/sha/latex/*.{dvi,ps.gz,pdf}
+%doc doc
 %{_libdir}/ocaml/sha/*.a
 %{_libdir}/ocaml/sha/*.cmxa
 %{_libdir}/ocaml/sha/*.cmx
