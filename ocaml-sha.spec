@@ -63,7 +63,7 @@ export OCAMLFIND_DESTDIR=%{buildroot}/%{_libdir}/ocaml
 export DLLDIR=$OCAMLFIND_DESTDIR/stublibs
 mkdir -p $OCAMLFIND_DESTDIR/stublibs
 mkdir -p $OCAMLFIND_DESTDIR/sha
-ocamlfind install sha META ./{*.mli,*.cmi,*.cma,*.a,*.cmxa,*.cmx}
+ocamlfind install sha META ./*.{mli,cmi,cma,a,o,cmxa} sha.cmx sha.cmo
 install -d -m 0755 %{buildroot}%{_bindir}
 for p in sha*sum ; do mv $p ml$p ; done
 # mlcmd_renamed: rename shaXsum by mlshaXsum (conflict with coreutils)
@@ -89,7 +89,9 @@ rm -rf %{buildroot}
 %doc sha.test.ml
 %doc doc
 %{_libdir}/ocaml/sha/*.a
+%{_libdir}/ocaml/sha/*.o
 %{_libdir}/ocaml/sha/*.cmxa
 %{_libdir}/ocaml/sha/*.cmx
+%{_libdir}/ocaml/sha/*.cmo
 %{_libdir}/ocaml/sha/*.ml*
 
