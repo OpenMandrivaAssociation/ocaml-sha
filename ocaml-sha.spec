@@ -1,6 +1,6 @@
 Name:           ocaml-sha
 Version:        1.5
-Release:        %mkrel 3
+Release:        %mkrel 4
 Summary:        SHA Cryptographic Hash Functions for OCaml
 License:        GPL2
 Group:          Development/Other
@@ -8,6 +8,7 @@ URL:            http://tab.snarc.org/projects/ocaml_sha
 Source0:        http://tab.snarc.org/download/ocaml/ocaml_sha-%{version}.tar.bz2
 # the command line utilities use argv.(0) (cf mlcmd_renamed)
 Patch0:         ocaml-sha-1.4_sumrenamed.patch
+Patch1:         ocaml-sha-1.5-makefile.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}
 BuildRequires:  ocaml-findlib
 
@@ -33,6 +34,7 @@ developing applications that use %{name}.
 %prep
 %setup -q -n ocaml_sha-%{version}
 %patch0 -p1
+%patch1 -p1
 
 # Adding a META file
 cat > META.in <<EOF
@@ -63,7 +65,7 @@ export OCAMLFIND_DESTDIR=%{buildroot}/%{_libdir}/ocaml
 export DLLDIR=$OCAMLFIND_DESTDIR/stublibs
 mkdir -p $OCAMLFIND_DESTDIR/stublibs
 mkdir -p $OCAMLFIND_DESTDIR/sha
-ocamlfind install sha META ./*.{mli,cmi,cma,a,o,cmxa} sha.cmx sha.cmo
+ocamlfind install sha META ./*.{mli,cmi,cma,a,cmxa,so} sha.cmx sha.cmo
 install -d -m 0755 %{buildroot}%{_bindir}
 for p in sha*sum ; do mv $p ml$p ; done
 # mlcmd_renamed: rename shaXsum by mlshaXsum (conflict with coreutils)
@@ -80,6 +82,8 @@ rm -rf %{buildroot}
 %{_libdir}/ocaml/sha/META
 %{_libdir}/ocaml/sha/*.cma
 %{_libdir}/ocaml/sha/*.cmi
+%{_libdir}/ocaml/sha/*.cmo
+%{_libdir}/ocaml/stublibs/*.so*
 %{_bindir}/mlsha1sum
 %{_bindir}/mlsha256sum
 %{_bindir}/mlsha512sum
@@ -89,9 +93,7 @@ rm -rf %{buildroot}
 %doc sha.test.ml
 %doc doc
 %{_libdir}/ocaml/sha/*.a
-%{_libdir}/ocaml/sha/*.o
 %{_libdir}/ocaml/sha/*.cmxa
 %{_libdir}/ocaml/sha/*.cmx
-%{_libdir}/ocaml/sha/*.cmo
 %{_libdir}/ocaml/sha/*.ml*
 
