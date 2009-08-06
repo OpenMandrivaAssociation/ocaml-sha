@@ -1,6 +1,6 @@
 Name:           ocaml-sha
 Version:        1.5
-Release:        %mkrel 4
+Release:        %mkrel 5
 Summary:        SHA Cryptographic Hash Functions for OCaml
 License:        GPL2
 Group:          Development/Other
