@@ -1,14 +1,13 @@
 Name:           ocaml-sha
-Version:        1.5
-Release:        %mkrel 5
+Version:        1.7
+Release:        %mkrel 1
 Summary:        SHA Cryptographic Hash Functions for OCaml
-License:        GPL2
+License:        LGPL 2.1 or LGPL 3.0
 Group:          Development/Other
 URL:            http://tab.snarc.org/projects/ocaml_sha
 Source0:        http://tab.snarc.org/download/ocaml/ocaml_sha-%{version}.tar.bz2
 # the command line utilities use argv.(0) (cf mlcmd_renamed)
-Patch0:         ocaml-sha-1.4_sumrenamed.patch
-Patch1:         ocaml-sha-1.5-makefile.patch
+Patch0:         ocaml-sha-1.7_sumrenamed.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}
 BuildRequires:  ocaml-findlib
 
@@ -34,29 +33,11 @@ developing applications that use %{name}.
 %prep
 %setup -q -n ocaml_sha-%{version}
 %patch0 -p1
-%patch1 -p1
-
-# Adding a META file
-cat > META.in <<EOF
-name="sha"
-description="SHA cryptographic hash functions"
-version="%{version}"
-archive(byte)="sha.cmo sha1.cma sha256.cma sha512.cma"
-archive(native)="sha.cmx sha1.cmxa sha256.cmxa sha512.cmxa"
-EOF
-
-# in case it would appear in a futur version
-test -f META && (echo "Warning: there is a META file" > /dev/stderr)
-test -f META || mv META.in META
 
 %build
 make       # the lib
 make bins  # the progs
-
-mkdir doc
-ocamldoc  sha1.mli  sha256.mli  sha512.mli \
-    -colorize-code -html  \
-    -d doc
+make doc
 
 %install
 rm -rf %{buildroot}
@@ -65,12 +46,11 @@ export OCAMLFIND_DESTDIR=%{buildroot}/%{_libdir}/ocaml
 export DLLDIR=$OCAMLFIND_DESTDIR/stublibs
 mkdir -p $OCAMLFIND_DESTDIR/stublibs
 mkdir -p $OCAMLFIND_DESTDIR/sha
-ocamlfind install sha META ./*.{mli,cmi,cma,a,cmxa,so} sha.cmx sha.cmo
+ocamlfind install sha META ./*.{mli,cmi,cma,a,cmo,cmx,cmxa,so}
 install -d -m 0755 %{buildroot}%{_bindir}
 for p in sha*sum ; do mv $p ml$p ; done
-# mlcmd_renamed: rename shaXsum by mlshaXsum (conflict with coreutils)
+# mlcmd_renamed: rename shaXsum to mlshaXsum (conflict with coreutils)
 install -m 0755 mlsha*sum %{buildroot}%{_bindir}/
-install -m 0755 mlsha1sum %{buildroot}%{_bindir}/
 
 %clean
 rm -rf %{buildroot}
@@ -91,7 +71,7 @@ rm -rf %{buildroot}
 %files devel
 %defattr(-,root,root)
 %doc sha.test.ml
-%doc doc
+%doc html
 %{_libdir}/ocaml/sha/*.a
 %{_libdir}/ocaml/sha/*.cmxa
 %{_libdir}/ocaml/sha/*.cmx
