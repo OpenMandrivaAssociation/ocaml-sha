@@ -1,0 +1,17 @@
+--- ocaml_sha-1.7/shasum.ml~	2009-11-09 12:09:21.000000000 +0100
++++ ocaml_sha-1.7/shasum.ml	2010-03-25 23:30:35.000000000 +0100
+@@ -81,10 +81,10 @@
+ 			basename
+ 		in
+ 	let sha = match prog with
+-		| "sha512sum" -> sha512
+-		| "sha256sum" -> sha256
+-		| "sha1sum"   -> sha1
+-		| "md5sum"    -> md5
++		| "mlsha512sum" | "sha512sum" -> sha512
++		| "mlsha256sum" | "sha256sum" -> sha256
++		| "mlsha1sum"   | "sha1sum"   -> sha1
++		| "mlmd5sum"    | "md5sum"    -> md5
+ 		| _           -> sha1 in
+ 
+ 	let execfct_with_catch file =
