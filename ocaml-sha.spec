@@ -1,6 +1,6 @@
 Name:           ocaml-sha
 Version:        1.7
-Release:        2
+Release:        3
 Summary:        SHA Cryptographic Hash Functions for OCaml
 License:        LGPL 2.1 or LGPL 3.0
 Group:          Development/Other
