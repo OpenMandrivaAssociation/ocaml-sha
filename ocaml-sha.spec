@@ -4,7 +4,7 @@ Release:        3
 Summary:        SHA Cryptographic Hash Functions for OCaml
 License:        LGPL 2.1 or LGPL 3.0
 Group:          Development/Other
-URL:            http://tab.snarc.org/projects/ocaml_sha
+URL:            https://tab.snarc.org/projects/ocaml_sha
 Source0:        http://tab.snarc.org/download/ocaml/ocaml_sha-%{version}.tar.bz2
 # the command line utilities use argv.(0) (cf mlcmd_renamed)
 Patch0:         ocaml-sha-1.7_sumrenamed.patch
